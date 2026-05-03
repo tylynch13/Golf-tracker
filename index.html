@@ -56,7 +56,50 @@ color:#1d3520 !important;
 .modal-wrap{
 background:rgba(0,0,0,0.55) !important;
 }
+body.dark{
+  background:#111827;
+  color:#f3f4f6;
+}
 
+body.dark .card,
+body.dark .course-card,
+body.dark .hcp-card,
+body.dark .a-card,
+body.dark .modal{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+
+body.dark .metric-card,
+body.dark .dc,
+body.dark .nav button.active{
+  background:#374151 !important;
+}
+
+body.dark .nav button{
+  background:#1f2937;
+  color:#f3f4f6;
+  border-color:#374151;
+}
+
+body.dark input,
+body.dark select{
+  background:#111827 !important;
+  color:#f3f4f6 !important;
+  border-color:#4b5563 !important;
+}
+
+body.dark .course-name,
+body.dark .metric-value,
+body.dark .hcp-big{
+  color:#ffffff !important;
+}
+
+body.dark .sub,
+body.dark .metric-label,
+body.dark .stat{
+  color:#d1d5db !important;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 .app{padding:1rem 0;max-width:680px}
 .nav{display:flex;gap:6px;margin-bottom:1.5rem}
@@ -162,6 +205,7 @@ background:rgba(0,0,0,0.55) !important;
     <button onclick="showView('courses')">Courses</button>
     <button onclick="showView('trends')">Trends</button>
     <button onclick="showView('handicap')">Handicap</button>
+    <button onclick="toggleDarkMode()" id="dark-toggle">🌙</button>
   </div>
 
   <div id="view-rounds" class="view active">
@@ -820,7 +864,15 @@ function showView(v){
   if(v==='trends'){setTimeout(renderTrends,50)}
   if(v==='handicap')renderHandicap();
 }
+function toggleDarkMode(){
+  document.body.classList.toggle('dark');
 
+  const isDark=document.body.classList.contains('dark');
+
+  localStorage.setItem('golfDarkMode',isDark);
+
+  document.getElementById('dark-toggle').textContent=isDark?'☀️':'🌙';
+}
 function closeModals(){
   document.getElementById('round-modal').style.display='none';
   document.getElementById('course-modal').style.display='none';
@@ -935,6 +987,17 @@ function editRound(id){
 window.addEventListener('beforeunload',()=>{
   saveData();
 });
+if(localStorage.getItem('golfDarkMode')==='true'){
+  document.body.classList.add('dark');
+
+  setTimeout(()=>{
+    const btn=document.getElementById('dark-toggle');
+
+    if(btn){
+      btn.textContent='☀️';
+    }
+  },50);
+}  
 loadData();
 
 renderRounds();
