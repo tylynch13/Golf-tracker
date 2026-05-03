@@ -450,7 +450,8 @@ let rounds=[
 let nextRoundId=4,nextCourseId=4;
 let trendCharts={};
 let selectedCourseIdForRound=null;
-
+let editingRoundId=null;
+  
 function totalScore(r){return r.holes.reduce((a,h)=>a+h.score,0)}
 function totalPar(r){return r.holes.reduce((a,h)=>a+h.par,0)}
 function scoreDiff(r){return((totalScore(r)-r.rating)*113/r.slope).toFixed(1)}
@@ -849,10 +850,10 @@ function deleteRound(id){
 
   rounds=rounds.filter(r=>r.id!==id);
 
-  saveData();
-  renderRounds();
-  renderTrends();
-  renderDashboard();
+saveData();
+renderRounds();
+renderTrends();
+renderHandicap();
 }
 
 function editRound(id){
