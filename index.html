@@ -748,18 +748,60 @@ function renderTrends(){
 
 function renderHandicap(){
   const sorted=[...rounds].sort((a,b)=>b.date.localeCompare(a.date));
-  const diffs=sorted.map(r=>parseFloat(scoreDiff(r))).sort((a,b)=>a-b);
-  let hcp='—';
-  if(diffs.length>=3){const best=diffs.slice(0,Math.max(1,Math.round(diffs.length*0.4)));hcp=(best.reduce((a,b)=>a+b,0)/best.length*0.96).toFixed(1)}
-  else if(diffs.length)hcp=diffs[0].toFixed(1);
-  document.getElementById('hcp-value').textContent=hcp;
+
+  const differentials=sorted
+    .map(r=>parseFloat(scoreDiff(r)))
+    .sort((a,b)=>a-b);
+
+  let handicap='—';
+
+  if(differentials.length>=20){
+    const best8=differentials.slice(0,8);
+    handicap=(best8.reduce((a,b)=>a+b,0)/8).toFixed(1);
+  }
+  else if(differentials.length>=15){
+    const best5=differentials.slice(0,5);
+    handicap=(best5.reduce((a,b)=>a+b,0)/5).toFixed(1);
+  }
+  else if(differentials.length>=8){
+    const best3=differentials.slice(0,3);
+    handicap=(best3.reduce((a,b)=>a+b,0)/3).toFixed(1);
+  }
+  else if(differentials.length){
+    handicap=differentials[0].toFixed(1);
+  }
+
+  document.getElementById('hcp-value').textContent=handicap;
+
   document.getElementById('hcp-history').innerHTML=sorted.map(r=>{
-    const d=parseFloat(scoreDiff(r)),dn=totalScore(r)-totalPar(r);
+    const d=parseFloat(scoreDiff(r));
+    const dn=totalScore(r)-totalPar(r);
+
     const ds=dn===0?'E':(dn>0?'+'+dn:''+dn);
-    return`<div class="hcp-row">
-      <div><div style="font-size:14px;color:var(--color-text-primary)">${r.course} ${chipHtml(r.tee)}</div><div class="sub">${formatDate(r.date)}</div></div>
-      <div style="display:flex;align-items:center;gap:10px"><div class="sub">${totalScore(r)} (${ds})</div><div class="diff-chip ${d<0?'dg':'db'}">${d>0?'+':''}${d}</div></div>
-    </div>`;
+
+    return`
+      <div class="hcp-row">
+        <div>
+          <div style="font-size:14px;color:var(--color-text-primary)">
+            ${r.course} ${chipHtml(r.tee)}
+          </div>
+
+          <div class="sub">
+            ${formatDate(r.date)}
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="sub">
+            ${totalScore(r)} (${ds})
+          </div>
+
+          <div class="diff-chip ${d<0?'dg':'db'}">
+            ${d>0?'+':''}${d}
+          </div>
+        </div>
+      </div>
+    `;
   }).join('');
 }
 
