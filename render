@@ -391,7 +391,14 @@ padding:16px;
 </body>
 </html>
 loadData();
+loadData();
 renderRounds();
+renderCourses();
+renderHandicap();
+
+setTimeout(() => {
+  renderTrends();
+}, 50);
 </script>
 </body>
 </html>
