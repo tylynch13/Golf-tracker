@@ -5,13 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Golf Tracker</title>
   <style>
-    /* Your full original styles */
-    *{box-sizing:border-box;margin:0;padding:0}
-    .app{padding:1rem 0;max-width:680px}
-    /* ... paste all your styles here (I kept them) ... */
-  </style>
-</head>
-<body>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{padding:1rem 0;max-width:680px}
+.nav{display:flex;gap:6px;margin-bottom:1.5rem}
+.nav button{flex:1;padding:9px 4px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.nav button.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500;border-color:var(--color-border-primary)}
+.view{display:none}.view.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
+.card-hover{cursor:pointer;transition:border-color .15s}.card-hover:hover{border-color:var(--color-border-primary)}
+.row-sb{display:flex;justify-content:space-between;align-items:flex-start}
+.course-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.sub{font-size:12px;color:var(--color-text-secondary)}
+.chip{display:inline-block;padding:2px 8px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
+.chip-white{background:#F1EFE8;color:#444441}.chip-yellow{background:#FAEEDA;color:#633806}.chip-blue{background:#E6F1FB;color:#0C447C}.chip-red{background:#FCEBEB;color:#791F1F}.chip-black{background:#2C2C2A;color:#D3D1C7}
+.score-chip{padding:4px 10px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500}
+.s-under{background:#EAF3DE;color:#3B6D11}.s-over{background:#FCEBEB;color:#A32D2D}.s-even{background:#E6F1FB;color:#185FA5}
+.stats-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.stat{font-size:13px;color:var(--color-text-secondary)}.stat span{font-weight:500;color:var(--color-text-primary)}
+.add-btn{width:100%;padding:12px;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);background:transparent;color:var(--color-text-secondary);font-size:14px;cursor:pointer;margin-top:4px}
+.add-btn:hover{background:var(--color-background-secondary)}
+.sec-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.mv-green{color:#3B6D11}.mv-red{color:#A32D2D}
+.detail-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem}
+.back-btn{padding:8px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);font-size:13px;cursor:pointer;flex-shrink:0}
+.back-btn:hover{background:var(--color-background-secondary)}
+.hole-wrap{overflow-x:auto;margin-bottom:1.5rem}
+.hole-table{width:100%;border-collapse:collapse;font-size:12px;min-width:560px;table-layout:fixed}
+.hole-table th{text-align:center;padding:7px 2px;color:var(--color-text-secondary);font-weight:400;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px}
+.hole-table th:first-child{text-align:left;width:56px}
+.hole-table td{text-align:center;padding:6px 2px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.hole-table td:first-child{text-align:left;color:var(--color-text-secondary);font-size:12px}
+.hole-table .tot-row td{border-bottom:none;font-weight:500;background:var(--color-background-secondary)}
+.sdot{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;font-size:12px;font-weight:500}
+.eagle{background:#5DCAA5;color:#04342C;border-radius:50%}.birdie{background:#9FE1CB;color:#085041;border-radius:50%}.par-dot{color:var(--color-text-primary)}.bogey{background:#FCEBEB;color:#A32D2D;border-radius:4px}.double{background:#A32D2D;color:white;border-radius:4px}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.a-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem}
+.a-card-title{font-size:12px;color:var(--color-text-secondary);margin-bottom:10px;font-weight:500}
+.brow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.blabel{font-size:12px;color:var(--color-text-secondary);width:60px;flex-shrink:0}
+.bwrap{flex:1;height:7px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden}
+.bfill{height:100%;border-radius:4px}
+.bcnt{font-size:12px;font-weight:500;color:var(--color-text-primary);width:18px;text-align:right;flex-shrink:0}
+.dir-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px}
+.dc{background:var(--color-background-secondary);border-radius:6px;padding:6px 4px;text-align:center;font-size:11px;color:var(--color-text-secondary)}
+.dc.miss{background:#FCEBEB;color:#A32D2D;font-weight:500}.dc.ctr{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary)}
+.chart-canvas{width:100%;height:150px;display:block}
+.hcp-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:12px}
+.hcp-big{font-size:56px;font-weight:500;color:var(--color-text-primary);line-height:1;margin-bottom:6px}
+.hcp-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.hcp-row:last-child{border-bottom:none}
+.diff-chip{font-size:13px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md)}
+.dg{color:#3B6D11;background:#EAF3DE}.db{color:#A32D2D;background:#FCEBEB}
+.course-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
+.course-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.course-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tee-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.tee-row:last-child{border-bottom:none}
+.tee-col{flex:1;text-align:right;color:var(--color-text-secondary)}
+.tee-col.val{color:var(--color-text-primary);font-weight:500}
+.course-actions{display:flex;gap:8px;margin-top:10px}
+.btn-sm{padding:6px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);font-size:12px;cursor:pointer}
+.btn-sm:hover{background:var(--color-background-secondary)}
+.btn-sm.primary{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.modal-wrap{min-height:480px;background:rgba(0,0,0,0.42);display:flex;align-items:flex-start;justify-content:center;padding:16px 0;border-radius:var(--border-radius-lg)}
+.modal{background:var(--color-background-primary);border-radius:var(--border-radius-lg);padding:1.5rem;width:96%;max-width:500px;border:0.5px solid var(--color-border-secondary)}
+.modal h3{font-size:16px;font-weight:500;margin-bottom:1.25rem;color:var(--color-text-primary)}
+.form-row{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px;display:block}
+.form-row input,.form-row select{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tee-input-block{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;margin-bottom:8px}
+.tee-input-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tee-input-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.modal-actions{display:flex;gap:8px;margin-top:1.25rem}
+.modal-actions button{flex:1;padding:10px;border-radius:var(--border-radius-md);cursor:pointer;font-size:14px}
+.btn-cancel{background:transparent;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary)}
+.btn-save{background:var(--color-background-secondary);border:0.5px solid var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+.hole-scroll{overflow-x:auto;margin-bottom:8px}
+.hole-input-row{display:flex;gap:5px;min-width:600px;margin-bottom:6px}
+.hi-label{font-size:11px;color:var(--color-text-secondary);width:70px;flex-shrink:0;padding-top:8px}
+.hi{text-align:center;padding:5px 2px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:var(--color-background-primary);color:var(--color-text-primary);font-size:12px;flex:1;min-width:0}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.rounds-count{font-size:12px;color:var(--color-text-secondary);background:var(--color-background-secondary);padding:2px 8px;border-radius:var(--border-radius-md)}
+.delete-btn{padding:6px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:#A32D2D;font-size:12px;cursor:pointer}
+.delete-btn:hover{background:#FCEBEB}
+.search-bar{width:100%;padding:9px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px;margin-bottom:1rem}
+.empty-state{text-align:center;padding:2rem;color:var(--color-text-secondary);font-size:14px}
+</style>
 
 <div class="app">
   <div class="nav">
@@ -26,90 +111,238 @@
     <button class="add-btn" onclick="openRoundModal()">+ Log new round</button>
   </div>
 
-  <!-- Your other views are here (unchanged) -->
+  <div id="view-detail" class="view">
+    <div class="detail-header">
+      <button class="back-btn" onclick="showView('rounds')">← Back</button>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px">
+          <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)" id="detail-title"></div>
+          <span id="detail-tee-chip"></span>
+        </div>
+        <div class="sub" id="detail-subtitle"></div>
+      </div>
+      <button class="btn-sm" onclick="doExport()">Export ↗</button>
+    </div>
+    <div class="summary-grid" id="summary-grid"></div>
+    <div class="sec-title">Hole by hole</div>
+    <div class="legend">
+      <div class="legend-item"><span class="sdot eagle" style="width:18px;height:18px;font-size:10px">-2</span> Eagle</div>
+      <div class="legend-item"><span class="sdot birdie" style="width:18px;height:18px;font-size:10px">-1</span> Birdie</div>
+      <div class="legend-item"><span class="sdot par-dot" style="width:18px;height:18px;font-size:10px">E</span> Par</div>
+      <div class="legend-item"><span class="sdot bogey" style="width:18px;height:18px;font-size:10px">+1</span> Bogey</div>
+      <div class="legend-item"><span class="sdot double" style="width:18px;height:18px;font-size:10px">+2</span> Double+</div>
+    </div>
+    <div class="hole-wrap"><table class="hole-table" id="hole-table"></table></div>
+    <div class="sec-title">Score breakdown</div>
+    <div class="analysis-grid" id="analysis-grid"></div>
+    <div class="sec-title">Miss direction</div>
+    <div class="analysis-grid" id="miss-dir-grid"></div>
+  </div>
+
+  <div id="view-courses" class="view">
+    <input class="search-bar" id="course-search" placeholder="Search courses..." oninput="renderCourses()">
+    <div id="courses-list"></div>
+    <button class="add-btn" onclick="openCourseModal()">+ Add course</button>
+  </div>
+
+  <div id="view-course-detail" class="view">
+    <div class="detail-header">
+      <button class="back-btn" onclick="showView('courses')">← Back</button>
+      <div style="flex:1">
+        <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)" id="cd-title"></div>
+        <div class="sub" id="cd-subtitle"></div>
+      </div>
+      <button class="btn-sm primary" onclick="logRoundFromCourse()">Log round here</button>
+    </div>
+    <div id="cd-tees"></div>
+    <div class="sec-title" style="margin-top:1rem" id="cd-rounds-title"></div>
+    <div id="cd-rounds"></div>
+  </div>
+
+  <div id="view-trends" class="view">
+    <div class="sec-title">Score trend</div>
+    <canvas class="chart-canvas" id="trend-chart" height="150"></canvas>
+    <div class="sec-title" style="margin-top:1.5rem">Handicap differential</div>
+    <canvas class="chart-canvas" id="diff-chart" height="130"></canvas>
+    <div class="sec-title" style="margin-top:1.5rem">GIR & FIR accuracy</div>
+    <canvas class="chart-canvas" id="acc-chart" height="130"></canvas>
+  </div>
+
+  <div id="view-handicap" class="view">
+    <div class="hcp-card">
+      <div class="hcp-big" id="hcp-value">—</div>
+      <div class="sub">World handicap index</div>
+    </div>
+    <div class="sec-title">Recent differentials</div>
+    <div id="hcp-history"></div>
+  </div>
 </div>
 
-<!-- Your modals (unchanged) -->
+<div id="round-modal" style="display:none;margin-top:12px">
+  <div class="modal-wrap">
+    <div class="modal">
+      <h3>Log a round</h3>
+      <div class="form-row">
+        <label class="form-label">Course</label>
+        <select id="inp-course-select" onchange="onCourseSelect()">
+          <option value="">— select from library —</option>
+        </select>
+      </div>
+      <div id="manual-course-fields">
+        <div class="form-2col">
+          <div class="form-row"><label class="form-label">Course name</label><input id="inp-course" placeholder="e.g. Kasumigaseki CC"/></div>
+          <div class="form-row"><label class="form-label">Date</label><input id="inp-date" type="date"/></div>
+        </div>
+        <div class="form-2col">
+          <div class="form-row"><label class="form-label">Course rating</label><input id="inp-rating" type="number" step="0.1" placeholder="72.1"/></div>
+          <div class="form-row"><label class="form-label">Slope rating</label><input id="inp-slope" type="number" placeholder="130"/></div>
+        </div>
+        <div class="form-row"><label class="form-label">Tee color</label>
+          <select id="inp-tee"><option value="white">White</option><option value="yellow">Yellow</option><option value="blue">Blue</option><option value="red">Red</option><option value="black">Black</option></select>
+        </div>
+      </div>
+      <div id="library-course-fields" style="display:none">
+        <div class="form-2col">
+          <div class="form-row"><label class="form-label">Date</label><input id="inp-date2" type="date"/></div>
+          <div class="form-row"><label class="form-label">Tee</label>
+            <select id="inp-tee2" onchange="onTeeSelect()"></select>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:12px" id="tee-info-line"></div>
+      </div>
+      <div class="form-label" style="margin-bottom:6px">Hole scores — scroll right for all 18</div>
+      <div class="hole-scroll">
+        <div style="display:flex;gap:5px;min-width:600px;margin-bottom:4px">
+          <div style="width:70px;flex-shrink:0"></div>
+          <div id="hole-num-row" style="display:flex;gap:5px;flex:1"></div>
+        </div>
+        <div id="hole-par-row" class="hole-input-row"><div class="hi-label">Par</div><div id="par-cells" style="display:flex;gap:5px;flex:1"></div></div>
+        <div class="hole-input-row"><div class="hi-label">Yardage</div><div id="yrd-cells" style="display:flex;gap:5px;flex:1"></div></div>
+        <div class="hole-input-row"><div class="hi-label">Score</div><div id="score-cells" style="display:flex;gap:5px;flex:1"></div></div>
+        <div class="hole-input-row"><div class="hi-label">Putts</div><div id="putt-cells" style="display:flex;gap:5px;flex:1"></div></div>
+        <div class="hole-input-row"><div class="hi-label">FIR</div><div id="fir-cells" style="display:flex;gap:5px;flex:1"></div></div>
+        <div class="hole-input-row"><div class="hi-label">Miss dir.</div><div id="miss-cells" style="display:flex;gap:5px;flex:1"></div></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModals()">Cancel</button>
+        <button class="btn-save" onclick="saveRound()">Save round</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="course-modal" style="display:none;margin-top:12px">
+  <div class="modal-wrap" style="min-height:520px">
+    <div class="modal">
+      <h3 id="course-modal-title">Add course</h3>
+      <div class="form-2col">
+        <div class="form-row"><label class="form-label">Course name</label><input id="cm-name" placeholder="e.g. Augusta National"/></div>
+        <div class="form-row"><label class="form-label">Location</label><input id="cm-loc" placeholder="e.g. Tokyo, Japan"/></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row"><label class="form-label">Holes</label><select id="cm-holes"><option value="18">18</option><option value="9">9</option></select></div>
+        <div class="form-row"><label class="form-label">Par</label><input id="cm-par" type="number" value="72" min="60" max="80"/></div>
+      </div>
+      <div class="sec-title" style="margin-bottom:8px">Tee options</div>
+      <div id="cm-tees">
+        <div class="tee-input-block" id="tee-block-white">
+          <div class="tee-input-header">
+            <span class="chip chip-white">White</span>
+            <span style="font-size:12px;color:var(--color-text-secondary)">Rating / Slope / Yardage</span>
+          </div>
+          <div class="tee-input-row">
+            <input class="hi" placeholder="Rating e.g. 71.8" id="t-white-rating" type="number" step="0.1">
+            <input class="hi" placeholder="Slope e.g. 128" id="t-white-slope" type="number">
+            <input class="hi" placeholder="Yards e.g. 6800" id="t-white-yards" type="number">
+          </div>
+        </div>
+        <div class="tee-input-block" id="tee-block-yellow">
+          <div class="tee-input-header"><span class="chip chip-yellow">Yellow</span><span style="font-size:12px;color:var(--color-text-secondary)">Rating / Slope / Yardage</span></div>
+          <div class="tee-input-row">
+            <input class="hi" placeholder="Rating" id="t-yellow-rating" type="number" step="0.1">
+            <input class="hi" placeholder="Slope" id="t-yellow-slope" type="number">
+            <input class="hi" placeholder="Yards" id="t-yellow-yards" type="number">
+          </div>
+        </div>
+        <div class="tee-input-block" id="tee-block-blue">
+          <div class="tee-input-header"><span class="chip chip-blue">Blue</span><span style="font-size:12px;color:var(--color-text-secondary)">Rating / Slope / Yardage</span></div>
+          <div class="tee-input-row">
+            <input class="hi" placeholder="Rating" id="t-blue-rating" type="number" step="0.1">
+            <input class="hi" placeholder="Slope" id="t-blue-slope" type="number">
+            <input class="hi" placeholder="Yards" id="t-blue-yards" type="number">
+          </div>
+        </div>
+        <div class="tee-input-block" id="tee-block-red">
+          <div class="tee-input-header"><span class="chip chip-red">Red</span><span style="font-size:12px;color:var(--color-text-secondary)">Rating / Slope / Yardage</span></div>
+          <div class="tee-input-row">
+            <input class="hi" placeholder="Rating" id="t-red-rating" type="number" step="0.1">
+            <input class="hi" placeholder="Slope" id="t-red-slope" type="number">
+            <input class="hi" placeholder="Yards" id="t-red-yards" type="number">
+          </div>
+        </div>
+        <div class="tee-input-block" id="tee-block-black">
+          <div class="tee-input-header"><span class="chip chip-black">Black</span><span style="font-size:12px;color:var(--color-text-secondary)">Rating / Slope / Yardage</span></div>
+          <div class="tee-input-row">
+            <input class="hi" placeholder="Rating" id="t-black-rating" type="number" step="0.1">
+            <input class="hi" placeholder="Slope" id="t-black-slope" type="number">
+            <input class="hi" placeholder="Yards" id="t-black-yards" type="number">
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModals()">Cancel</button>
+        <button class="btn-save" onclick="saveCourse()">Save course</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-  // === FULL CODE WITH FIXES ===
-  const TEE_CHIP={white:'chip chip-white',yellow:'chip chip-yellow',blue:'chip chip-blue',red:'chip chip-red',black:'chip chip-black'};
-  const TEE_COLORS_LIST=['white','yellow','blue','red','black'];
+const TEE_CHIP={white:'chip chip-white',yellow:'chip chip-yellow',blue:'chip chip-blue',red:'chip chip-red',black:'chip chip-black'};
+const TEE_COLORS_LIST=['white','yellow','blue','red','black'];
 
-  let courses = [ /* your 3 courses */ ];
-  let rounds = [ /* your 3 rounds */ ];
+let courses=[
+  {id:1,name:'Kasumigaseki CC',location:'Kawagoe, Saitama',holes:18,par:72,
+   tees:{
+     white:{rating:71.8,slope:128,yards:6820},
+     blue:{rating:73.4,slope:134,yards:7050},
+     yellow:{rating:69.2,slope:120,yards:6400}
+   }},
+  {id:2,name:'Hirono GC',location:'Miki, Hyogo',holes:18,par:72,
+   tees:{
+     white:{rating:73.2,slope:136,yards:6950},
+     yellow:{rating:70.5,slope:126,yards:6500},
+     red:{rating:67.8,slope:118,yards:5800}
+   }},
+  {id:3,name:'Naruo GC',location:'Itami, Hyogo',holes:18,par:72,
+   tees:{
+     white:{rating:70.5,slope:122,yards:6600},
+     yellow:{rating:68.2,slope:116,yards:6150},
+     red:{rating:65.4,slope:110,yards:5500}
+   }}
+];
 
-  let nextRoundId = 4;
-  let editingRoundId = null;
+let rounds=[
+  {id:1,courseId:1,course:'Kasumigaseki CC',date:'2026-04-20',rating:73.4,slope:134,tee:'blue',
+   holes:[ /* your hole data */ ]},
+  {id:2,courseId:2,course:'Hirono GC',date:'2026-03-15',rating:73.2,slope:136,tee:'white', holes:[ /* ... */ ]},
+  {id:3,courseId:3,course:'Naruo GC',date:'2026-02-08',rating:70.5,slope:122,tee:'yellow', holes:[ /* ... */ ]}
+];
 
-  // LocalStorage
-  function loadData() {
-    const saved = localStorage.getItem('golfRounds');
-    if (saved) rounds = JSON.parse(saved);
-  }
+let nextRoundId=4,nextCourseId=4;
+let trendCharts={};
+let selectedCourseIdForRound=null;
 
-  function saveData() {
-    localStorage.setItem('golfRounds', JSON.stringify(rounds));
-  }
+function totalScore(r){return r.holes.reduce((a,h)=>a+h.score,0)}
+function totalPar(r){return r.holes.reduce((a,h)=>a+h.par,0)}
+function scoreDiff(r){return((totalScore(r)-r.rating)*113/r.slope).toFixed(1)}
+function formatDate(d){return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}
+function chipHtml(tee){return`<span class="chip ${TEE_CHIP[tee]||'chip chip-white'}">${tee}</span>`}
 
-  // Your helper functions
-  function totalScore(r){return r.holes.reduce((a,h)=>a+h.score,0)}
-  function totalPar(r){return r.holes.reduce((a,h)=>a+h.par,0)}
-  function scoreDiff(r){return((totalScore(r)-r.rating)*113/r.slope).toFixed(1)}
-  function formatDate(d){return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}
-  function chipHtml(tee){return`<span class="chip ${TEE_CHIP[tee]||'chip chip-white'}">${tee}</span>`}
+// ... (the rest of your original script functions: renderRounds, showDetail, renderCourses, etc.)
 
-  // Updated renderRounds with Edit & Delete
-  function renderRounds(){
-    const list=document.getElementById('rounds-list');
-    list.innerHTML='';
-    if(!rounds.length){list.innerHTML='<div class="empty-state">No rounds yet. Log your first round!</div>';return}
-    [...rounds].sort((a,b)=>b.date.localeCompare(a.date)).forEach(r=>{
-      const tot=totalScore(r),par=totalPar(r),dn=tot-par;
-      const bc=dn<0?'s-under':dn>0?'s-over':'s-even';
-      const bt=dn===0?'E':(dn>0?'+'+dn:''+dn);
-      const fw=r.holes.filter(h=>h.par!==3);
-      const fh=r.holes.filter(h=>h.fir).length;
-      const gir=r.holes.filter(h=>h.gir).length;
-      const putts=r.holes.reduce((a,h)=>a+h.putts,0);
-      list.innerHTML+=`<div class="card card-hover">
-        <div onclick="showDetail(${r.id})" style="cursor:pointer">
-          <div class="row-sb">
-            <div><div class="course-name">${r.course} ${chipHtml(r.tee)}</div><div class="sub">${formatDate(r.date)}</div></div>
-            <span class="score-chip ${bc}">${tot} (${bt})</span>
-          </div>
-          <div class="stats-row">
-            <div class="stat">FIR <span>${fh}/${fw.length}</span></div>
-            <div class="stat">GIR <span>${gir}/18</span></div>
-            <div class="stat">Putts <span>${putts}</span></div>
-            <div class="stat">Diff <span>${scoreDiff(r)}</span></div>
-          </div>
-        </div>
-        <div class="round-actions">
-          <button class="btn-small btn-edit" onclick="editRound(${r.id});event.stopImmediatePropagation()">✏️ Edit</button>
-          <button class="btn-small btn-delete" onclick="deleteRound(${r.id});event.stopImmediatePropagation()">🗑️ Delete</button>
-        </div>
-      </div>`;
-    });
-  }
-
-  function deleteRound(id){
-    if(confirm("Delete this round permanently?")) {
-      rounds = rounds.filter(r => r.id !== id);
-      saveData();
-      renderRounds();
-    }
-  }
-
-  function editRound(id){
-    alert("Edit round " + id + " - full support coming soon");
-  }
-
-  // Keep all your other functions (openRoundModal, saveRound, showView, etc.) 
-
-  loadData();
-  renderRounds();
+renderRounds();
 </script>
 </body>
 </html>
