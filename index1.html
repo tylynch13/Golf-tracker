@@ -892,4 +892,14 @@ function editRound(id){
 }
 
 loadData();
+
+renderRounds();
+renderCourses();
+renderHandicap();
+
+setTimeout(()=>{
+  renderTrends();
+},100);
+
+showView('rounds');
 </script>
