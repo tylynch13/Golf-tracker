@@ -711,4 +711,16 @@ function doExport(){
 }
 
 renderRounds();
+  // ==================== LOCALSTORAGE & NEW FEATURES ====================
+function loadData() {
+  const saved = localStorage.getItem('golfRounds');
+  if (saved) rounds = JSON.parse(saved);
+  if (rounds.length) nextRoundId = Math.max(...rounds.map(r => r.id)) + 1;
+}
+
+function saveData() {
+  localStorage.setItem('golfRounds', JSON.stringify(rounds));
+}
+
+loadData();
 </script>
