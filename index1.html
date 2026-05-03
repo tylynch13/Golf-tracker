@@ -526,7 +526,7 @@ function showDetail(id){
   const left=misses.filter(h=>h.missDir==='left').length,right=misses.filter(h=>h.missDir==='right').length;
   const shortM=misses.filter(h=>h.missDir==='short').length,longM=misses.filter(h=>h.missDir==='long').length;
   const hit=18-misses.length,maxD=Math.max(left,right,shortM,longM,1);
-  const dCell=(lbl,cnt)=>`<div class="dc${cnt>0?' miss':''}"><div style="font-size:16px;font-weight:500">${cnt}</div><div style="font-size:10px">${lbl}</div></div>`;
+const dCell=(lbl,cnt)=>`<div class="dc${cnt>0?' miss':''}"><div style="font-size:16px;font-weight:500">${cnt}</div><div style="font-size:10px">${lbl}</div></div>`;
   const hitCell=`<div class="dc ctr"><div style="font-size:15px;font-weight:500">${hit}</div><div style="font-size:10px">on target</div></div>`;
   document.getElementById('miss-dir-grid').innerHTML=`
     <div class="a-card"><div class="a-card-title">Direction compass</div>
