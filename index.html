@@ -932,7 +932,9 @@ function editRound(id){
     });
   },50);
 }
-
+window.addEventListener('beforeunload',()=>{
+  saveData();
+});
 loadData();
 
 renderRounds();
