@@ -1,127 +1,646 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golf Tracker</title>
-  <style>
-    /* Your full styles (kept exactly) */
-    *{box-sizing:border-box;margin:0;padding:0}
-    .app{padding:1rem 0;max-width:680px}
-    .nav{display:flex;gap:6px;margin-bottom:1.5rem}
-    .nav button{flex:1;padding:9px 4px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
-    .nav button.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500;border-color:var(--color-border-primary)}
-    .view{display:none}.view.active{display:block}
-    .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
-    .card-hover{cursor:pointer;transition:border-color .15s}.card-hover:hover{border-color:var(--color-border-primary)}
-    .row-sb{display:flex;justify-content:space-between;align-items:flex-start}
-    .course-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
-    .sub{font-size:12px;color:var(--color-text-secondary)}
-    .chip{display:inline-block;padding:2px 8px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
-    .chip-white{background:#F1EFE8;color:#444441}.chip-yellow{background:#FAEEDA;color:#633806}.chip-blue{background:#E6F1FB;color:#0C447C}.chip-red{background:#FCEBEB;color:#791F1F}.chip-black{background:#2C2C2A;color:#D3D1C7}
-    .score-chip{padding:4px 10px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500}
-    .s-under{background:#EAF3DE;color:#3B6D11}.s-over{background:#FCEBEB;color:#A32D2D}.s-even{background:#E6F1FB;color:#185FA5}
-    .stats-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
-    .stat{font-size:13px;color:var(--color-text-secondary)}.stat span{font-weight:500;color:var(--color-text-primary)}
-    .add-btn{width:100%;padding:12px;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);background:transparent;color:var(--color-text-secondary);font-size:14px;cursor:pointer;margin-top:4px}
-    .add-btn:hover{background:var(--color-background-secondary)}
-    .round-actions{margin-top:8px;display:flex;gap:8px}
-    .btn-small{padding:6px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;font-size:12px}
-    .btn-edit{color:#185FA5}
-    .btn-delete{color:#A32D2D}
-    .btn-small:hover{background:var(--color-background-secondary)}
-    /* All other styles you had */
-  </style>
-</head>
-<body>
-
-<div class="app">
-  <div class="nav">
-    <button class="active" onclick="showView('rounds')">Rounds</button>
-    <button onclick="showView('courses')">Courses</button>
-    <button onclick="showView('trends')">Trends</button>
-    <button onclick="showView('handicap')">Handicap</button>
-  </div>
-
-  <div id="view-rounds" class="view active">
-    <div id="rounds-list"></div>
-    <button class="add-btn" onclick="openRoundModal()">+ Log new round</button>
-  </div>
-
-  <!-- Your other views and modals (keep them as is) -->
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-const TEE_CHIP={white:'chip chip-white',yellow:'chip chip-yellow',blue:'chip chip-blue',red:'chip chip-red',black:'chip chip-black'};
-const TEE_COLORS_LIST=['white','yellow','blue','red','black'];
+// ==================== CONFIG ====================
 
-let courses = [ /* your 3 courses */ ];
-let rounds = [ /* your 3 rounds */ ];
+const TEE_CHIP = {
+  white:'chip chip-white',
+  yellow:'chip chip-yellow',
+  blue:'chip chip-blue',
+  red:'chip chip-red',
+  black:'chip chip-black'
+};
 
-let nextRoundId = 4;
+const TEE_COLORS_LIST = ['white','yellow','blue','red','black'];
+
+let editingRoundId = null;
+
+// ==================== DATA ====================
+
+let courses = [
+  {
+    id:1,
+    name:'Kasumigaseki CC',
+    location:'Kawagoe, Saitama',
+    holes:18,
+    par:72,
+    tees:{
+      white:{rating:71.8,slope:128,yards:6820},
+      blue:{rating:73.4,slope:134,yards:7050},
+      yellow:{rating:69.2,slope:120,yards:6400}
+    }
+  }
+];
+
+let rounds = [];
+
+let nextRoundId = 1;
+let nextCourseId = 2;
+
 let trendCharts = {};
 let selectedCourseIdForRound = null;
 
-function totalScore(r){return r.holes.reduce((a,h)=>a+h.score,0)}
-function totalPar(r){return r.holes.reduce((a,h)=>a+h.par,0)}
-function scoreDiff(r){return((totalScore(r)-r.rating)*113/r.slope).toFixed(1)}
-function formatDate(d){return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}
-function chipHtml(tee){return`<span class="chip ${TEE_CHIP[tee]||'chip chip-white'}">${tee}</span>`}
+// ==================== STORAGE ====================
 
-// Updated with Edit/Delete
-function renderRounds(){
-  const list=document.getElementById('rounds-list');
-  list.innerHTML='';
-  if(!rounds.length){list.innerHTML='<div class="empty-state">No rounds yet. Log your first round!</div>';return}
-  [...rounds].sort((a,b)=>b.date.localeCompare(a.date)).forEach(r=>{
-    const tot=totalScore(r),par=totalPar(r),dn=tot-par;
-    const bc=dn<0?'s-under':dn>0?'s-over':'s-even';
-    const bt=dn===0?'E':(dn>0?'+'+dn:''+dn);
-    const fw=r.holes.filter(h=>h.par!==3);
-    const fh=r.holes.filter(h=>h.fir).length;
-    const gir=r.holes.filter(h=>h.gir).length;
-    const putts=r.holes.reduce((a,h)=>a+h.putts,0);
-    list.innerHTML+=`<div class="card card-hover">
-      <div onclick="showDetail(${r.id})" style="cursor:pointer">
-        <div class="row-sb">
-          <div><div class="course-name">${r.course} ${chipHtml(r.tee)}</div><div class="sub">${formatDate(r.date)}</div></div>
-          <span class="score-chip ${bc}">${tot} (${bt})</span>
-        </div>
-        <div class="stats-row">
-          <div class="stat">FIR <span>${fh}/${fw.length}</span></div>
-          <div class="stat">GIR <span>${gir}/18</span></div>
-          <div class="stat">Putts <span>${putts}</span></div>
-          <div class="stat">Diff <span>${scoreDiff(r)}</span></div>
-        </div>
-      </div>
-      <div class="round-actions">
-        <button class="btn-small btn-edit" onclick="editRound(${r.id});event.stopImmediatePropagation()">✏️ Edit</button>
-        <button class="btn-small btn-delete" onclick="deleteRound(${r.id});event.stopImmediatePropagation()">🗑️ Delete</button>
-      </div>
-    </div>`;
-  });
-}
+function loadData() {
 
-function deleteRound(id){
-  if(confirm("Delete this round permanently?")) {
-    rounds = rounds.filter(r => r.id !== id);
-    localStorage.setItem('golfRounds', JSON.stringify(rounds));
-    renderRounds();
+  const savedRounds = localStorage.getItem('golfRounds');
+  const savedCourses = localStorage.getItem('golfCourses');
+
+  if (savedRounds) {
+    rounds = JSON.parse(savedRounds);
+  }
+
+  if (savedCourses) {
+    courses = JSON.parse(savedCourses);
+  }
+
+  if (rounds.length) {
+    nextRoundId = Math.max(...rounds.map(r => r.id)) + 1;
+  }
+
+  if (courses.length) {
+    nextCourseId = Math.max(...courses.map(c => c.id)) + 1;
   }
 }
 
-function editRound(id){
-  alert("Edit round #" + id + " (full version coming soon)");
+function saveData() {
+
+  localStorage.setItem(
+    'golfRounds',
+    JSON.stringify(rounds)
+  );
+
+  localStorage.setItem(
+    'golfCourses',
+    JSON.stringify(courses)
+  );
 }
 
-// Your other functions (showDetail, saveRound, showView, etc.) - keep them as they were in your original file
+// ==================== HELPERS ====================
 
-// Load saved data
-const saved = localStorage.getItem('golfRounds');
-if (saved) rounds = JSON.parse(saved);
+function totalScore(r){
+  return r.holes.reduce((a,h)=>a+h.score,0);
+}
+
+function totalPar(r){
+  return r.holes.reduce((a,h)=>a+h.par,0);
+}
+
+function scoreDiff(r){
+  return (
+    (totalScore(r)-r.rating)*113/r.slope
+  ).toFixed(1);
+}
+
+function formatDate(d){
+  return new Date(d+'T00:00:00')
+    .toLocaleDateString('en-US',{
+      year:'numeric',
+      month:'short',
+      day:'numeric'
+    });
+}
+
+function chipHtml(tee){
+  return `
+    <span class="chip ${TEE_CHIP[tee] || 'chip chip-white'}">
+      ${tee}
+    </span>
+  `;
+}
+
+// ==================== RENDER ROUNDS ====================
+
+function renderRounds(){
+
+  const list = document.getElementById('rounds-list');
+
+  list.innerHTML = '';
+
+  if(!rounds.length){
+    list.innerHTML = `
+      <div class="empty-state">
+        No rounds yet. Log your first round!
+      </div>
+    `;
+    return;
+  }
+
+  [...rounds]
+    .sort((a,b)=>b.date.localeCompare(a.date))
+    .forEach(r=>{
+
+      const tot = totalScore(r);
+      const par = totalPar(r);
+
+      const dn = tot - par;
+
+      const bc =
+        dn < 0 ? 's-under'
+        : dn > 0 ? 's-over'
+        : 's-even';
+
+      const bt =
+        dn === 0 ? 'E'
+        : dn > 0 ? '+' + dn
+        : '' + dn;
+
+      const fw = r.holes.filter(h=>h.par!==3);
+
+      const fh = r.holes.filter(h=>h.fir).length;
+
+      const gir = r.holes.filter(h=>h.gir).length;
+
+      const putts = r.holes.reduce((a,h)=>a+h.putts,0);
+
+      list.innerHTML += `
+        <div class="card card-hover"
+             onclick="showDetail(${r.id})">
+
+          <div class="row-sb">
+
+            <div>
+              <div class="course-name">
+                ${r.course}
+                ${chipHtml(r.tee)}
+              </div>
+
+              <div class="sub">
+                ${formatDate(r.date)}
+              </div>
+            </div>
+
+            <span class="score-chip ${bc}">
+              ${tot} (${bt})
+            </span>
+
+          </div>
+
+          <div class="stats-row">
+            <div class="stat">
+              FIR <span>${fh}/${fw.length}</span>
+            </div>
+
+            <div class="stat">
+              GIR <span>${gir}/18</span>
+            </div>
+
+            <div class="stat">
+              Putts <span>${putts}</span>
+            </div>
+
+            <div class="stat">
+              Diff <span>${scoreDiff(r)}</span>
+            </div>
+          </div>
+
+          <div class="course-actions"
+               onclick="event.stopPropagation()">
+
+            <button class="btn-sm"
+                    onclick="editRound(${r.id})">
+              Edit
+            </button>
+
+            <button class="delete-btn"
+                    onclick="deleteRound(${r.id})">
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+      `;
+    });
+}
+
+// ==================== DELETE ROUND ====================
+
+function deleteRound(id){
+
+  if(!confirm('Delete this round?')) return;
+
+  rounds = rounds.filter(r=>r.id!==id);
+
+  saveData();
+
+  renderRounds();
+}
+
+// ==================== EDIT ROUND ====================
+
+function editRound(id){
+
+  const r = rounds.find(x=>x.id===id);
+
+  if(!r) return;
+
+  editingRoundId = id;
+
+  openRoundModal(r.courseId);
+
+  setTimeout(()=>{
+
+    if(r.courseId){
+
+      document.getElementById(
+        'inp-course-select'
+      ).value = r.courseId;
+
+      onCourseSelect();
+
+      document.getElementById(
+        'inp-date2'
+      ).value = r.date;
+
+      document.getElementById(
+        'inp-tee2'
+      ).value = r.tee;
+
+    } else {
+
+      document.getElementById(
+        'inp-course'
+      ).value = r.course;
+
+      document.getElementById(
+        'inp-date'
+      ).value = r.date;
+
+      document.getElementById(
+        'inp-rating'
+      ).value = r.rating;
+
+      document.getElementById(
+        'inp-slope'
+      ).value = r.slope;
+
+      document.getElementById(
+        'inp-tee'
+      ).value = r.tee;
+    }
+
+    r.holes.forEach((h,i)=>{
+
+      const n = i + 1;
+
+      document.getElementById(
+        `par-${n}`
+      ).value = h.par;
+
+      document.getElementById(
+        `yrd-${n}`
+      ).value = h.yardage;
+
+      document.getElementById(
+        `score-${n}`
+      ).value = h.score;
+
+      document.getElementById(
+        `putt-${n}`
+      ).value = h.putts;
+
+      document.getElementById(
+        `fir-${n}`
+      ).value = h.fir ? '1':'0';
+
+      document.getElementById(
+        `miss-${n}`
+      ).value = h.missDir || '';
+    });
+
+  },50);
+}
+
+// ==================== SAVE ROUND ====================
+
+function saveRound(){
+
+  const selId = parseInt(
+    document.getElementById(
+      'inp-course-select'
+    ).value
+  );
+
+  let courseName,
+      rating,
+      slope,
+      tee,
+      date;
+
+  if(selId){
+
+    const c = courses.find(
+      x=>x.id===selId
+    );
+
+    courseName = c.name;
+
+    tee = document.getElementById(
+      'inp-tee2'
+    ).value;
+
+    rating = c.tees[tee]?.rating || 72;
+
+    slope = c.tees[tee]?.slope || 113;
+
+    date = document.getElementById(
+      'inp-date2'
+    ).value;
+
+  } else {
+
+    courseName = document
+      .getElementById('inp-course')
+      .value.trim() || 'Unknown Course';
+
+    rating = parseFloat(
+      document.getElementById(
+        'inp-rating'
+      ).value
+    ) || 72;
+
+    slope = parseFloat(
+      document.getElementById(
+        'inp-slope'
+      ).value
+    ) || 113;
+
+    tee = document.getElementById(
+      'inp-tee'
+    ).value;
+
+    date = document.getElementById(
+      'inp-date'
+    ).value;
+  }
+
+  const holes = [];
+
+  for(let i=1;i<=18;i++){
+
+    const par = parseInt(
+      document.getElementById(
+        'par-'+i
+      ).value
+    ) || 4;
+
+    const score = parseInt(
+      document.getElementById(
+        'score-'+i
+      ).value
+    ) || par;
+
+    const putts = parseInt(
+      document.getElementById(
+        'putt-'+i
+      ).value
+    ) || 2;
+
+    const firV = document.getElementById(
+      'fir-'+i
+    ).value;
+
+    const fir = firV === '1';
+
+    const missDir = document.getElementById(
+      'miss-'+i
+    ).value;
+
+    const yardage = parseInt(
+      document.getElementById(
+        'yrd-'+i
+      ).value
+    ) || 380;
+
+    holes.push({
+      par,
+      score,
+      putts,
+      yardage,
+      fir,
+      gir:score<=par && putts<=2,
+      missDir
+    });
+  }
+
+  const newRound = {
+    courseId: selId || null,
+    course: courseName,
+    date: date || new Date()
+      .toISOString()
+      .split('T')[0],
+    rating,
+    slope,
+    tee,
+    holes
+  };
+
+  if(editingRoundId){
+
+    const idx = rounds.findIndex(
+      r=>r.id===editingRoundId
+    );
+
+    rounds[idx] = {
+      ...newRound,
+      id: editingRoundId
+    };
+
+    editingRoundId = null;
+
+  } else {
+
+    newRound.id = nextRoundId++;
+
+    rounds.push(newRound);
+  }
+
+  saveData();
+
+  closeModals();
+
+  renderRounds();
+}
+
+// ==================== SAVE COURSE ====================
+
+function saveCourse(){
+
+  const name = document
+    .getElementById('cm-name')
+    .value.trim();
+
+  if(!name){
+    alert('Please enter a course name');
+    return;
+  }
+
+  const tees = {};
+
+  TEE_COLORS_LIST.forEach(t=>{
+
+    const r = document.getElementById(
+      `t-${t}-rating`
+    ).value;
+
+    const s = document.getElementById(
+      `t-${t}-slope`
+    ).value;
+
+    const y = document.getElementById(
+      `t-${t}-yards`
+    ).value;
+
+    if(r && s){
+
+      tees[t] = {
+        rating: parseFloat(r),
+        slope: parseInt(s),
+        yards: y ? parseInt(y) : null
+      };
+    }
+  });
+
+  if(!Object.keys(tees).length){
+    alert('Please fill in at least one tee.');
+    return;
+  }
+
+  courses.push({
+    id: nextCourseId++,
+    name,
+    location: document
+      .getElementById('cm-loc')
+      .value.trim(),
+    holes: parseInt(
+      document.getElementById(
+        'cm-holes'
+      ).value
+    ) || 18,
+    par: parseInt(
+      document.getElementById(
+        'cm-par'
+      ).value
+    ) || 72,
+    tees
+  });
+
+  saveData();
+
+  closeModals();
+
+  renderCourses();
+}
+
+// ==================== DELETE COURSE ====================
+
+function deleteCourse(id){
+
+  if(rounds.some(r=>r.courseId===id)){
+    alert(
+      'Cannot remove — rounds are linked to this course.'
+    );
+    return;
+  }
+
+  courses = courses.filter(c=>c.id!==id);
+
+  saveData();
+
+  renderCourses();
+}
+
+// ==================== EXPORT ====================
+
+function exportData(){
+
+  const data = {
+    rounds,
+    courses
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:'application/json'}
+  );
+
+  const a = document.createElement('a');
+
+  a.href = URL.createObjectURL(blob);
+
+  a.download = 'golf-tracker-data.json';
+
+  a.click();
+}
+
+// ==================== IMPORT ====================
+
+function importData(event){
+
+  const file = event.target.files[0];
+
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+
+    try {
+
+      const data = JSON.parse(
+        e.target.result
+      );
+
+      if(data.rounds){
+        rounds = data.rounds;
+      }
+
+      if(data.courses){
+        courses = data.courses;
+      }
+
+      saveData();
+
+      renderRounds();
+
+      renderCourses();
+
+      alert('Import successful!');
+
+    } catch {
+
+      alert('Invalid backup file.');
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+// ==================== EXPORT BUTTON ====================
+
+function doExport(){
+  exportData();
+}
+
+// ==================== CLOSE MODALS ====================
+
+function closeModals(){
+
+  document.getElementById(
+    'round-modal'
+  ).style.display='none';
+
+  document.getElementById(
+    'course-modal'
+  ).style.display='none';
+
+  selectedCourseIdForRound = null;
+}
+
+// ==================== INIT ====================
+
+loadData();
 
 renderRounds();
+
 </script>
-</body>
-</html>
