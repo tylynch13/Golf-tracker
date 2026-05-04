@@ -14,29 +14,29 @@
 
 <style>
 :root {
-  --color-background-primary: #ffffff;
-  --color-background-secondary: #f5f5f0;
-  --color-text-primary: #1d3520;
-  --color-text-secondary: #6b7280;
+  --color-background-primary: #fafffa; /* Lighter green tint */
+  --color-background-secondary: #e8f5e9; /* Muted green */
+  --color-text-primary: #1b5e20; /* Dark Green */
+  --color-text-secondary: #388e3c; /* Medium Green */
   --color-border-primary: #43a047;
-  --color-border-secondary: #d1d5db;
-  --color-border-tertiary: #e5e7eb;
+  --color-border-secondary: #a5d6a7;
+  --color-border-tertiary: #c8e6c9;
   --border-radius-md: 8px;
   --border-radius-lg: 14px;
 }
 body.dark {
-  --color-background-primary: #1f2937;
-  --color-background-secondary: #374151;
-  --color-text-primary: #f3f4f6;
-  --color-text-secondary: #d1d5db;
-  --color-border-primary: #6b7280;
-  --color-border-secondary: #4b5563;
-  --color-border-tertiary: #374151;
+  --color-background-primary: #101d12; /* Darker forest green */
+  --color-background-secondary: #1b2b1d; /* Very dark green */
+  --color-text-primary: #e8f5e9;
+  --color-text-secondary: #a5d6a7;
+  --color-border-primary: #388e3c;
+  --color-border-secondary: #2e7d32;
+  --color-border-tertiary: #1b5e20;
 }
 html, body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  background: #f5f5f0;
-  color: #1d3520;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
@@ -47,38 +47,28 @@ body {
   padding-top: max(16px, env(safe-area-inset-top));
   padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
-body.dark { background: #111827; color: #f3f4f6; }
 * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 button, a, [role="button"] { touch-action: manipulation; }
 .app { padding: 0; max-width: 680px; margin: 0 auto; padding-bottom: 20px; }
-/* iOS input zoom fix — ALL inputs/selects must be >= 16px */
 input, select, textarea { font-size: 16px !important; -webkit-appearance: none; appearance: none; border-radius: 8px; }
 select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px !important; }
-/* Touch targets — min 44px */
 .nav button { min-height: 44px; padding: 10px 4px; font-size: 12px; }
 .btn-sm, .btn-cancel, .btn-save { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .back-btn { min-height: 44px; display: inline-flex; align-items: center; }
 .delete-btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .add-btn { min-height: 48px; }
 .filter-chip { min-height: 36px; display: inline-flex; align-items: center; }
-/* Smooth momentum scrolling on iOS */
 .hole-wrap, .hole-scroll, [style*="overflow-x:auto"], [style*="overflow-x: auto"] { -webkit-overflow-scrolling: touch; overflow-x: auto; }
-/* Card active state for touch feedback */
 .card-hover:active { opacity: 0.85; transform: scale(0.99); }
 button:active { opacity: 0.75; }
-/* Modal overlay iOS fix */
 .modal-overlay { -webkit-overflow-scrolling: touch; }
 .modal { -webkit-overflow-scrolling: touch; max-height: 90vh; overflow-y: auto; }
-/* Inputs readable in dark mode on iOS */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
-/* Form inputs */
 .form-row input, .form-row select, .form-row textarea { font-size: 16px !important; min-height: 44px; }
 .hi { font-size: 14px !important; }
 .search-bar { font-size: 16px !important; min-height: 44px; }
-/* Prevent text selection on buttons */
 .nav button, .btn-sm, .back-btn, .delete-btn, .add-btn, .filter-chip { -webkit-user-select: none; user-select: none; }
-
 
 .hero-header{
 background:linear-gradient(135deg,#1b5e20,#43a047,#81c784);
@@ -110,74 +100,30 @@ color:rgba(255,255,255,0.9);
 font-weight:500;
 }
 .modal{
-background:#ffffff !important;
-border:1px solid #d7e3d8 !important;
+background:var(--color-background-primary) !important;
+border:1px solid var(--color-border-secondary) !important;
 box-shadow:0 12px 30px rgba(0,0,0,0.18);
 }
 .form-row input,.form-row select{
-background:#f8fff8 !important;
-border:1px solid #b7d8bb !important;
-color:#1d3520 !important;
+background: var(--color-background-secondary) !important;
+border:1px solid var(--color-border-secondary) !important;
+color:var(--color-text-primary) !important;
 padding:11px 12px !important;
 font-size:15px !important;
 }
 .form-row input:focus,.form-row select:focus{
 outline:none;
-border-color:#43a047 !important;
+border-color:var(--color-border-primary) !important;
 box-shadow:0 0 0 3px rgba(67,160,71,0.18);
-background:#ffffff !important;
+background:var(--color-background-primary) !important;
 }
 .hole-input-row input,.hole-input-row select{
-background:#f8fff8 !important;
-border:1px solid #b7d8bb !important;
-color:#1d3520 !important;
+background:var(--color-background-secondary) !important;
+border:1px solid var(--color-border-secondary) !important;
+color:var(--color-text-primary) !important;
 }
 .modal-wrap{
 background:rgba(0,0,0,0.55) !important;
-}
-body.dark{
-  background:#111827;
-  color:#f3f4f6;
-}
-
-body.dark .card,
-body.dark .course-card,
-body.dark .hcp-card,
-body.dark .a-card,
-body.dark .modal{
-  background:#1f2937 !important;
-  border-color:#374151 !important;
-}
-
-body.dark .metric-card,
-body.dark .dc,
-body.dark .nav button.active{
-  background:#374151 !important;
-}
-
-body.dark .nav button{
-  background:#1f2937;
-  color:#f3f4f6;
-  border-color:#374151;
-}
-
-body.dark input,
-body.dark select{
-  background:#111827 !important;
-  color:#f3f4f6 !important;
-  border-color:#4b5563 !important;
-}
-
-body.dark .course-name,
-body.dark .metric-value,
-body.dark .hcp-big{
-  color:#ffffff !important;
-}
-
-body.dark .sub,
-body.dark .metric-label,
-body.dark .stat{
-  color:#d1d5db !important;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 .app{padding:1rem 0;max-width:680px}
@@ -192,7 +138,7 @@ body.dark .stat{
 .sub{font-size:12px;color:var(--color-text-secondary)}
 .chip{display:inline-block;padding:2px 8px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
 .chip-white{background:#F1EFE8;color:#444441}.chip-yellow{background:#FAEEDA;color:#633806}.chip-blue{background:#E6F1FB;color:#0C447C}.chip-red{background:#FCEBEB;color:#791F1F}.chip-black{background:#2C2C2A;color:#D3D1C7}
-.score-chip{padding:4px 10px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500}
+.score-chip{padding:4px 10px;border-radius:var(--border-radius-md);font-size:14px;font-weight:500}
 .s-under{background:#EAF3DE;color:#3B6D11}.s-over{background:#FCEBEB;color:#A32D2D}.s-even{background:#E6F1FB;color:#185FA5}
 .stats-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
 .stat{font-size:13px;color:var(--color-text-secondary)}.stat span{font-weight:500;color:var(--color-text-primary)}
@@ -252,7 +198,7 @@ body.dark .stat{
 .club-range input{width:62px;padding:6px 8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:16px;text-align:center;font-weight:500}
 .club-range span{font-size:12px;color:var(--color-text-secondary)}
 .club-icon{font-size:26px;width:32px;text-align:center;flex-shrink:0}
-body.dark .club-range input{background:#111827 !important;color:#f3f4f6 !important;border-color:#4b5563 !important}
+body.dark .club-range input{background:var(--color-background-secondary) !important;color:var(--color-text-primary) !important;border-color:var(--color-border-secondary) !important}
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:rgba(0,0,0,0.55);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;box-sizing:border-box}
 .modal-wrap{min-height:480px;background:rgba(0,0,0,0.42);display:flex;align-items:flex-start;justify-content:center;padding:16px 0;border-radius:var(--border-radius-lg)}
 .modal{background:var(--color-background-primary);border-radius:var(--border-radius-lg);padding:1.5rem;width:96%;max-width:500px;border:0.5px solid var(--color-border-secondary)}
@@ -285,8 +231,8 @@ body.dark .club-range input{background:#111827 !important;color:#f3f4f6 !importa
 .filter-chip{padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:transparent;color:var(--color-text-secondary);font-size:12px;cursor:pointer;transition:all .15s}
 .filter-chip:hover{background:var(--color-background-secondary)}
 .filter-chip.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
-body.dark .filter-chip{background:#1f2937;color:#d1d5db;border-color:#374151}
-body.dark .filter-chip.active{background:#374151;color:#ffffff}
+body.dark .filter-chip{background:var(--color-background-secondary);color:var(--color-text-primary)}
+body.dark .filter-chip.active{background:var(--color-background-primary);color:var(--color-text-primary)}
 </style>
 
 <div class="app">
@@ -346,7 +292,7 @@ body.dark .filter-chip.active{background:#374151;color:#ffffff}
       </div>
       <div id="detail-view-btns" style="display:flex;gap:6px;flex-shrink:0">
         <button class="btn-sm" onclick="shareScorecard()">Share</button>
-        <button class="btn-sm" onclick="enterEditMode()">Edit</button>
+        <button class="btn-sm" onclick="editRound(currentDetailRoundId)">Edit</button>
         <button class="delete-btn" style="font-size:12px" onclick="if(confirm('Delete this round?')){deleteRound(currentDetailRoundId);showView('rounds')}">Delete</button>
       </div>
       <div id="detail-edit-btns" style="display:none;gap:6px;flex-shrink:0">
@@ -818,18 +764,17 @@ function renderRounds(){
     const tot=totalScore(r),par=totalPar(r),dn=tot-par;
     const bc=dn<0?'s-under':dn>0?'s-over':'s-even';
     const bt=dn===0?'E':(dn>0?'+'+dn:''+dn);
-    const fw=r.holes.filter(h=>h.par!==3);
-    const fh=r.holes.filter(h=>h.fir).length;
-    const gir=r.holes.filter(h=>h.gir).length;
-    const putts=r.holes.reduce((a,h)=>a+h.putts,0);
-    list.innerHTML+=`<div class="card card-hover" onclick="showDetail(${r.id})">
-      <div class="row-sb">
-        <div><div class="course-name">${r.course} ${chipHtml(r.tee)}</div><div class="sub">${formatDate(r.date)}${r.weather?` · ${r.weather}`:''}${r.temp?` · ${r.temp}°C`:''}</div></div>
-        <span class="score-chip ${bc}">${tot} (${bt})</span>
-      </div>
-      <div class="course-actions" onclick="event.stopPropagation()">
-        <button class="delete-btn" onclick="deleteRound(${r.id})">Delete round</button>
-      </div>
+    list.innerHTML+=`<div class="card card-hover" onclick="showDetail(${r.id})" style="cursor:pointer;">
+        <div class="row-sb" style="align-items: center;">
+            <div style="flex-grow: 1;">
+                <div class="course-name">${r.course}</div>
+                <div class="sub">${formatDate(r.date)}${r.weather?` · ${r.weather}`:''}${r.temp?` · ${r.temp}°C`:''}</div>
+            </div>
+            <span class="score-chip ${bc}">${tot} (${bt})</span>
+        </div>
+        <div style="margin-top: 10px; border-top: 1px solid var(--color-border-tertiary); padding-top: 10px; display: flex; justify-content: flex-end;">
+            <button class="btn-sm" style="padding: 4px 10px; font-size: 11px;" onclick="shareScorecard(${r.id}); event.stopPropagation();">Share score card</button>
+        </div>
     </div>`;
   });
 }
@@ -982,7 +927,6 @@ function enterEditMode(){
   document.getElementById('e-weather').value=r.weather||'';
   document.getElementById('e-temp').value=r.temp||'';
 
-  // Build one CSS grid — every row has the same 19 columns (label + 18 holes)
   const rows=[
     {label:'Hole', cells: Array.from({length:18},(_,i)=>`<div class="he-num">${i+1}</div>`)},
     {label:'Par',  cells: r.holes.map((h,i)=>`<input type="number" id="e-par-${i+1}" value="${h.par}" class="hi" min="3" max="5">`)},
@@ -1036,6 +980,7 @@ function saveInlineEdit(){
 }
 
 function buildHoleInputs(pars,yards){
+  const defPars = pars || [4,3,4,5,4,3,4,4,5,4,3,4,5,4,3,4,5,4];
   const defYds=yards||[380,165,375,510,400,175,370,415,530,385,160,395,520,365,185,405,545,375];
   document.getElementById('hole-num-row').innerHTML=Array.from({length:18},(_,i)=>`<div style="flex:1;text-align:center;font-size:11px;color:var(--color-text-secondary);padding-top:8px">${i+1}</div>`).join('');
   ['par','yrd','score','putt','fir','miss'].forEach(type=>{
@@ -1194,7 +1139,6 @@ function renderTrends(){
 
   const labels=filteredSorted.map(r=>formatDate(r.date));
 
-  // Summary cards
   const scores=filteredSorted.map(r=>totalScore(r));
   const avg=(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1);
   const recent5=scores.slice(-5);
@@ -1210,7 +1154,6 @@ function renderTrends(){
     <div class="metric-card"><div class="metric-label">Best score</div><div class="metric-value mv-green">${bestScore}</div></div>
     <div class="metric-card"><div class="metric-label">Trend (last 5)</div><div class="metric-value" style="font-size:14px;padding-top:6px">${trendHtml}</div></div>`;
 
-  // Chart defaults
   const tickStyle={font:{size:11},color:'#888'};
   const gridStyle={color:'rgba(128,128,128,0.08)'};
   const baseOpts=(yLabel)=>({
@@ -1230,14 +1173,12 @@ function renderTrends(){
     trendCharts[id]=new Chart(canvas.getContext('2d'),{type:'line',data:{labels,datasets},options:opts});
   }
 
-  // Score trend
   mkChart('trend-chart',[{
     label:'Score',data:scores,
     borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,0.08)',
     fill:true,tension:0.35,pointRadius:5,pointBackgroundColor:'#185FA5',pointBorderColor:'#fff',pointBorderWidth:2
   }],baseOpts('Score'));
 
-  // Handicap differential
   const diffs=filteredSorted.map(r=>parseFloat(scoreDiff(r)));
   mkChart('diff-chart',[{
     label:'Differential',data:diffs,
@@ -1245,14 +1186,12 @@ function renderTrends(){
     fill:true,tension:0.35,pointRadius:5,pointBackgroundColor:'#3B6D11',pointBorderColor:'#fff',pointBorderWidth:2
   }],baseOpts('Differential'));
 
-  // Putts per round
   mkChart('putts-chart',[{
     label:'Putts',data:allPutts,
     borderColor:'#8B5CF6',backgroundColor:'rgba(139,92,246,0.08)',
     fill:true,tension:0.35,pointRadius:5,pointBackgroundColor:'#8B5CF6',pointBorderColor:'#fff',pointBorderWidth:2
   }],baseOpts('Putts'));
 
-  // GIR & FIR
   const girs=filteredSorted.map(r=>Math.round(r.holes.filter(h=>h.gir).length/18*100));
   const firs=filteredSorted.map(r=>{const fw=r.holes.filter(h=>h.par!==3);return fw.length?Math.round(r.holes.filter(h=>h.fir).length/fw.length*100):0});
   const accOpts=baseOpts('%');
@@ -1384,7 +1323,6 @@ function renderHandicap(){
 
   document.getElementById('hcp-value').textContent=handicap;
 
-  // Build rolling handicap history (chronological)
   const chrono=[...rounds].sort((a,b)=>a.date.localeCompare(b.date));
   const hcpHistory=[];
   for(let i=0;i<chrono.length;i++){
@@ -1398,7 +1336,6 @@ function renderHandicap(){
     if(hcp!=='—') hcpHistory.push({date:chrono[i].date,hcp:parseFloat(hcp)});
   }
 
-  // Draw handicap trend chart
   const hcpCanvas=document.getElementById('hcp-trend-chart');
   if(hcpCanvas){
     if(trendCharts['hcp-trend-chart']){trendCharts['hcp-trend-chart'].destroy();}
@@ -1487,11 +1424,8 @@ function showView(v){
 }
 function toggleDarkMode(){
   document.body.classList.toggle('dark');
-
   const isDark=document.body.classList.contains('dark');
-
   localStorage.setItem('golfDarkMode',isDark);
-
   document.getElementById('dark-toggle').textContent=isDark?'☀️':'🌙';
 }
 function closeModals(){
@@ -1515,17 +1449,17 @@ function closeAddClubModal(){
 
 function doExport(){ exportData(); }
 
-  // ==================== LOCALSTORAGE & NEW FEATURES ====================
 function loadData() {
   const savedRounds = localStorage.getItem('golfRounds');
   const savedCourses = localStorage.getItem('golfCourses');
+  const savedBag = localStorage.getItem('golfBag');
 
   if (savedRounds) rounds = JSON.parse(savedRounds);
   if (savedCourses) courses = JSON.parse(savedCourses);
+  if (savedBag) bag = JSON.parse(savedBag);
 
   if (rounds.length) nextRoundId = Math.max(...rounds.map(r => r.id)) + 1;
   if (courses.length) nextCourseId = Math.max(...courses.map(c => c.id)) + 1;
-  loadBag();
 }
 
 function saveData() {
@@ -1556,20 +1490,6 @@ const DEFAULT_BAG=[
 
 let bag=DEFAULT_BAG.map(c=>({...c}));
 
-function loadBag(){
-  const saved=localStorage.getItem('golfBag');
-  if(saved){
-    try{
-      const parsed=JSON.parse(saved);
-      if(Array.isArray(parsed)&&parsed.length) bag=parsed;
-    }catch(e){}
-  }
-}
-
-function saveBag(){
-  localStorage.setItem('golfBag',JSON.stringify(bag));
-}
-
 function renderBag(){
   const el=document.getElementById('bag-list');
   let html='';
@@ -1598,13 +1518,13 @@ function renderBag(){
 
 function updateClub(i,field,val){
   bag[i][field]=parseInt(val)||0;
-  saveBag();
+  saveData();
 }
 
 function removeClub(i){
   if(!confirm(`Remove "${bag[i].name}" from your bag?`))return;
   bag.splice(i,1);
-  saveBag();
+  saveData();
   renderBag();
 }
 
@@ -1616,10 +1536,9 @@ function addCustomClub(){
   const max=parseInt(document.getElementById('new-club-max').value)||0;
   const icons={Woods:'🪵',Hybrids:'🔀',Irons:'⚙️',Wedges:'🥏',Putter:'🏌️',Other:'⛳'};
   bag.push({category:cat,icon:icons[cat]||'⛳',name,min,max});
-  // Sort so same categories stay together
   const catOrder=['Woods','Hybrids','Irons','Wedges','Putter','Other'];
   bag.sort((a,b)=>catOrder.indexOf(a.category)-catOrder.indexOf(b.category));
-  saveBag();
+  saveData();
   renderBag();
   closeAddClubModal();
 }
@@ -1629,14 +1548,10 @@ function runClubFinder(){
   const el=document.getElementById('finder-result');
   if(!yds||yds<=0){el.innerHTML='';return}
 
-  // Find exact matches (yardage falls within range)
   const exact=bag.filter(c=>c.min>0&&c.max>0&&yds>=c.min&&yds<=c.max);
-
-  // Find closest clubs by midpoint distance (for when yardage is between clubs)
   const withMid=bag.filter(c=>c.min>0&&c.max>0).map(c=>({...c,mid:(c.min+c.max)/2,dist:Math.abs((c.min+c.max)/2-yds)}));
   withMid.sort((a,b)=>a.dist-b.dist);
-  const closest=withMid.slice(0,3);
-
+  
   if(exact.length){
     const primary=exact.sort((a,b)=>Math.abs((a.min+a.max)/2-yds)-Math.abs((b.min+b.max)/2-yds))[0];
     const others=exact.filter(c=>c.name!==primary.name);
@@ -1649,8 +1564,7 @@ function runClubFinder(){
         </div>
         ${others.length?`<div style="color:rgba(255,255,255,0.85);font-size:13px">Also in range: ${others.map(c=>`<strong>${c.name}</strong>`).join(', ')}</div>`:''}
       </div>`;
-  } else if(closest.length){
-    // Between clubs — show club up and club down
+  } else if(withMid.length){
     const over=withMid.filter(c=>c.mid>yds)[0];
     const under=withMid.filter(c=>c.mid<yds).reverse()[0]||withMid[withMid.length-1];
     el.innerHTML=`
@@ -1675,12 +1589,12 @@ function runClubFinder(){
 function resetBagDefaults(){
   if(!confirm('Reset all clubs to default ranges?')) return;
   bag=DEFAULT_BAG.map(c=>({...c}));
-  saveBag();
+  saveData();
   renderBag();
 }
 
 function exportData(){
-  const data={rounds,courses,exportedAt:new Date().toISOString(),version:1};
+  const data={rounds,courses,bag,exportedAt:new Date().toISOString(),version:1.1};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   const ts=new Date().toISOString().slice(0,10);
@@ -1700,8 +1614,7 @@ function importData(event){
     try{
       const data=JSON.parse(e.target.result);
       if(!data.rounds&&!data.courses) throw new Error('No valid data found');
-      const existingRounds=rounds.length;
-      const existingCourses=courses.length;
+      
       if(data.rounds){
         const newRounds=data.rounds.filter(nr=>!rounds.find(r=>r.id===nr.id));
         rounds=[...rounds,...newRounds];
@@ -1712,13 +1625,15 @@ function importData(event){
         courses=[...courses,...newCourses];
         if(courses.length) nextCourseId=Math.max(...courses.map(c=>c.id))+1;
       }
+      if(data.bag){
+        bag = data.bag;
+      }
       saveData();
       renderRounds();
       renderCourses();
       renderHandicap();
-      const addedRounds=(rounds.length-existingRounds);
-      const addedCourses=(courses.length-existingCourses);
-      alert(`Import successful!\n\nAdded ${addedRounds} round${addedRounds!==1?'s':''} and ${addedCourses} course${addedCourses!==1?'s':''}.`);
+      renderBag();
+      alert(`Import successful!`);
     }catch(err){
       alert('Import failed: '+err.message+'\n\nMake sure you are using a Golf Tracker backup file.');
     }
@@ -1727,11 +1642,9 @@ function importData(event){
   reader.readAsText(file);
 }
 
-function shareScorecard(){
-  const titleEl=document.getElementById('detail-title');
-  const subtitleEl=document.getElementById('detail-subtitle');
-  if(!titleEl||!currentDetailRoundId) return;
-  const r=rounds.find(x=>x.id===currentDetailRoundId);
+function shareScorecard(roundId){
+  const idToShare = roundId !== undefined ? roundId : currentDetailRoundId;
+  const r=rounds.find(x=>x.id===idToShare);
   if(!r) return;
   const tot=totalScore(r),par=totalPar(r),dn=tot-par;
   const scoreStr=dn===0?'Even':(dn>0?'+'+dn+' over':''+Math.abs(dn)+' under');
@@ -1744,13 +1657,12 @@ function shareScorecard(){
   const pars2=r.holes.filter(h=>h.score-h.par===0).length;
   const bogeys=r.holes.filter(h=>h.score-h.par===1).length;
   const doubles=r.holes.filter(h=>h.score-h.par>=2).length;
-
   const scoreColor=dn<0?'#3B6D11':dn>0?'#A32D2D':'#185FA5';
   const scoreBg=dn<0?'#EAF3DE':dn>0?'#FCEBEB':'#E6F1FB';
 
   function sdot(score,par){
     const d=score-par;
-    let bg='transparent',color='#333',radius='3px',border='none';
+    let bg='transparent',color='#333',radius='3px';
     if(d<=-2){bg='#5DCAA5';color='#04342C';radius='50%'}
     else if(d===-1){bg='#9FE1CB';color='#085041';radius='50%'}
     else if(d===1){bg='#FCEBEB';color='#A32D2D';radius='4px'}
@@ -1766,7 +1678,6 @@ function shareScorecard(){
   const back9Par=back9.reduce((a,h)=>a+h.par,0);
 
   function holeRow(holes,offset){
-    const nums=holes.map((_,i)=>`<td style="text-align:center;padding:5px 3px;font-size:11px;color:#888">${i+1+offset}</td>`).join('');
     const pars=holes.map(h=>`<td style="text-align:center;padding:5px 3px;font-size:12px">${h.par}</td>`).join('');
     const scores=holes.map(h=>sdot(h.score,h.par)).join('');
     const puttsRow=holes.map(h=>`<td style="text-align:center;padding:5px 3px;font-size:12px;color:#666">${h.putts}</td>`).join('');
@@ -1774,99 +1685,12 @@ function shareScorecard(){
     const pTotal=holes.reduce((a,h)=>a+h.par,0);
     const tDn=total-pTotal;
     const tStr=tDn===0?'E':(tDn>0?'+'+tDn:''+tDn);
-    return {nums,pars,scores,puttsRow,total,pTotal,tStr};
+    return {pars,scores,puttsRow,total,pTotal,tStr};
   }
   const f=holeRow(front9,0);
   const b=holeRow(back9,9);
 
-  const cardHtml=`<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Scorecard — ${r.course}</title>
-<style>
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;margin:0;padding:20px;color:#1d3520}
-  .card{background:white;border-radius:16px;padding:24px;max-width:700px;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
-  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0e8e0}
-  .course-title{font-size:22px;font-weight:700;color:#1b5e20;margin-bottom:4px}
-  .course-meta{font-size:13px;color:#555}
-  .score-big{text-align:right}
-  .score-num{font-size:42px;font-weight:800;line-height:1}
-  .score-label{font-size:13px;margin-top:2px}
-  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-  .stat-box{background:#f0f7f0;border-radius:10px;padding:10px;text-align:center}
-  .stat-val{font-size:20px;font-weight:700;color:#1b5e20}
-  .stat-lbl{font-size:11px;color:#555;margin-top:2px}
-  .breakdown{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-  .bd{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
-  table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px}
-  th{background:#1b5e20;color:white;padding:7px 4px;text-align:center;font-weight:500;font-size:11px}
-  th:first-child{text-align:left;padding-left:8px}
-  tr:nth-child(even){background:#f8fdf8}
-  .row-label{text-align:left;padding-left:8px;font-weight:500;color:#444;font-size:12px}
-  .tot-row td{background:#e8f5e9;font-weight:700}
-  .footer{text-align:center;font-size:11px;color:#aaa;margin-top:16px;padding-top:12px;border-top:1px solid #eee}
-  @media print{body{background:white;padding:0}.card{box-shadow:none}}
-</style>
-</head>
-<body>
-<div class="card">
-  <div class="header">
-    <div>
-      <div class="course-title">${r.course}</div>
-      <div class="course-meta">${new Date(r.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} &nbsp;·&nbsp; ${r.tee.charAt(0).toUpperCase()+r.tee.slice(1)} tees &nbsp;·&nbsp; Rating ${r.rating} / Slope ${r.slope}</div>
-    </div>
-    <div class="score-big">
-      <div class="score-num" style="color:${scoreColor}">${tot}</div>
-      <div class="score-label" style="background:${scoreBg};color:${scoreColor};padding:3px 10px;border-radius:20px;font-weight:600">${scoreStr}</div>
-    </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat-box"><div class="stat-val">${putts}</div><div class="stat-lbl">Total putts</div></div>
-    <div class="stat-box"><div class="stat-val">${gir}/18</div><div class="stat-lbl">GIR</div></div>
-    <div class="stat-box"><div class="stat-val">${fh}/${fw.length}</div><div class="stat-lbl">FIR</div></div>
-    <div class="stat-box"><div class="stat-val">${(putts/18).toFixed(1)}</div><div class="stat-lbl">Avg putts</div></div>
-  </div>
-
-  <div class="breakdown">
-    ${eagles>0?`<span class="bd" style="background:#5DCAA5;color:#04342C">${eagles} eagle${eagles!==1?'s':''}</span>`:''}
-    ${birdies>0?`<span class="bd" style="background:#9FE1CB;color:#085041">${birdies} birdie${birdies!==1?'s':''}</span>`:''}
-    <span class="bd" style="background:#E6F1FB;color:#185FA5">${pars2} par${pars2!==1?'s':''}</span>
-    ${bogeys>0?`<span class="bd" style="background:#FCEBEB;color:#A32D2D">${bogeys} bogey${bogeys!==1?'s':''}</span>`:''}
-    ${doubles>0?`<span class="bd" style="background:#A32D2D;color:white">${doubles} double+</span>`:''}
-  </div>
-
-  <table>
-    <thead><tr><th>Front 9</th>${front9.map((_,i)=>`<th>${i+1}</th>`).join('')}<th>Out</th></tr></thead>
-    <tbody>
-      <tr><td class="row-label">Par</td>${f.pars}<td style="text-align:center;font-weight:700">${f.pTotal}</td></tr>
-      <tr><td class="row-label">Score</td>${f.scores}<td style="text-align:center;font-weight:700">${f.total} (${f.tStr})</td></tr>
-      <tr><td class="row-label">Putts</td>${f.puttsRow}<td style="text-align:center">${front9.reduce((a,h)=>a+h.putts,0)}</td></tr>
-    </tbody>
-  </table>
-
-  <table>
-    <thead><tr><th>Back 9</th>${back9.map((_,i)=>`<th>${i+10}</th>`).join('')}<th>In</th></tr></thead>
-    <tbody>
-      <tr><td class="row-label">Par</td>${b.pars}<td style="text-align:center;font-weight:700">${b.pTotal}</td></tr>
-      <tr><td class="row-label">Score</td>${b.scores}<td style="text-align:center;font-weight:700">${b.total} (${b.tStr})</td></tr>
-      <tr><td class="row-label">Putts</td>${b.puttsRow}<td style="text-align:center">${back9.reduce((a,h)=>a+h.putts,0)}</td></tr>
-    </tbody>
-  </table>
-
-  <table>
-    <thead><tr><th colspan="2">Summary</th><th>Front</th><th>Back</th><th>Total</th></tr></thead>
-    <tbody>
-      <tr class="tot-row"><td class="row-label" colspan="2">Score</td><td style="text-align:center">${front9Total} (${front9Total-front9Par>0?'+':''}${front9Total-front9Par===0?'E':front9Total-front9Par})</td><td style="text-align:center">${back9Total} (${back9Total-back9Par>0?'+':''}${back9Total-back9Par===0?'E':back9Total-back9Par})</td><td style="text-align:center">${tot} (${dn>0?'+':''}${dn===0?'E':dn})</td></tr>
-    </tbody>
-  </table>
-
-  <div class="footer">Generated by Golf Tracker &nbsp;·&nbsp; ${new Date().toLocaleDateString()}</div>
-</div>
-<scr'+'ipt>window.onload=function(){window.print()}<\/scr'+'ipt>
-</body>
-</html>`;
+  const cardHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Scorecard — ${r.course}</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;margin:0;padding:20px;color:#1d3520}.card{background:white;border-radius:16px;padding:24px;max-width:700px;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.1)}.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0e8e0}.course-title{font-size:22px;font-weight:700;color:#1b5e20;margin-bottom:4px}.course-meta{font-size:13px;color:#555}.score-big{text-align:right}.score-num{font-size:42px;font-weight:800;line-height:1}.score-label{font-size:13px;margin-top:2px}.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.stat-box{background:#f0f7f0;border-radius:10px;padding:10px;text-align:center}.stat-val{font-size:20px;font-weight:700;color:#1b5e20}.stat-lbl{font-size:11px;color:#555;margin-top:2px}.breakdown{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}.bd{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px}th{background:#1b5e20;color:white;padding:7px 4px;text-align:center;font-weight:500;font-size:11px}th:first-child{text-align:left;padding-left:8px}tr:nth-child(even){background:#f8fdf8}.row-label{text-align:left;padding-left:8px;font-weight:500;color:#444;font-size:12px}.tot-row td{background:#e8f5e9;font-weight:700}.footer{text-align:center;font-size:11px;color:#aaa;margin-top:16px;padding-top:12px;border-top:1px solid #eee}@media print{body{background:white;padding:0}.card{box-shadow:none}}</style></head><body><div class="card"><div class="header"><div><div class="course-title">${r.course}</div><div class="course-meta">${new Date(r.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} &nbsp;·&nbsp; ${r.tee.charAt(0).toUpperCase()+r.tee.slice(1)} tees &nbsp;·&nbsp; Rating ${r.rating} / Slope ${r.slope}</div></div><div class="score-big"><div class="score-num" style="color:${scoreColor}">${tot}</div><div class="score-label" style="background:${scoreBg};color:${scoreColor};padding:3px 10px;border-radius:20px;font-weight:600">${scoreStr}</div></div></div><div class="stats-bar"><div class="stat-box"><div class="stat-val">${putts}</div><div class="stat-lbl">Total putts</div></div><div class="stat-box"><div class="stat-val">${gir}/18</div><div class="stat-lbl">GIR</div></div><div class="stat-box"><div class="stat-val">${fh}/${fw.length}</div><div class="stat-lbl">FIR</div></div><div class="stat-box"><div class="stat-val">${(putts/18).toFixed(1)}</div><div class="stat-lbl">Avg putts</div></div></div><div class="breakdown">${eagles>0?`<span class="bd" style="background:#5DCAA5;color:#04342C">${eagles} eagle${eagles!==1?'s':''}</span>`:''}${birdies>0?`<span class="bd" style="background:#9FE1CB;color:#085041">${birdies} birdie${birdies!==1?'s':''}</span>`:''}<span class="bd" style="background:#E6F1FB;color:#185FA5">${pars2} par${pars2!==1?'s':''}</span>${bogeys>0?`<span class="bd" style="background:#FCEBEB;color:#A32D2D">${bogeys} bogey${bogeys!==1?'s':''}</span>`:''}${doubles>0?`<span class="bd" style="background:#A32D2D;color:white">${doubles} double+</span>`:''}</div><table><thead><tr><th>Front 9</th>${front9.map((_,i)=>`<th>${i+1}</th>`).join('')}<th>Out</th></tr></thead><tbody><tr><td class="row-label">Par</td>${f.pars}<td style="text-align:center;font-weight:700">${f.pTotal}</td></tr><tr><td class="row-label">Score</td>${f.scores}<td style="text-align:center;font-weight:700">${f.total} (${f.tStr})</td></tr><tr><td class="row-label">Putts</td>${f.puttsRow}<td style="text-align:center">${front9.reduce((a,h)=>a+h.putts,0)}</td></tr></tbody></table><table><thead><tr><th>Back 9</th>${back9.map((_,i)=>`<th>${i+10}</th>`).join('')}<th>In</th></tr></thead><tbody><tr><td class="row-label">Par</td>${b.pars}<td style="text-align:center;font-weight:700">${b.pTotal}</td></tr><tr><td class="row-label">Score</td>${b.scores}<td style="text-align:center;font-weight:700">${b.total} (${b.tStr})</td></tr><tr><td class="row-label">Putts</td>${b.puttsRow}<td style="text-align:center">${back9.reduce((a,h)=>a+h.putts,0)}</td></tr></tbody></table><table><thead><tr><th colspan="2">Summary</th><th>Front</th><th>Back</th><th>Total</th></tr></thead><tbody><tr class="tot-row"><td class="row-label" colspan="2">Score</td><td style="text-align:center">${front9Total} (${front9Total-front9Par>0?'+':''}${front9Total-front9Par===0?'E':front9Total-front9Par})</td><td style="text-align:center">${back9Total} (${back9Total-back9Par>0?'+':''}${back9Total-back9Par===0?'E':back9Total-back9Par})</td><td style="text-align:center">${tot} (${dn>0?'+':''}${dn===0?'E':dn})</td></tr></tbody></table><div class="footer">Generated by Golf Tracker &nbsp;·&nbsp; ${new Date().toLocaleDateString()}</div></div><scr`+'ipt>window.onload=function(){window.print()}</scr'+`ipt></body></html>`;
 
   const blob=new Blob([cardHtml],{type:'text/html'});
   const a=document.createElement('a');
@@ -1881,22 +1705,15 @@ function shareScorecard(){
 
 function deleteRound(id){
   if(!confirm('Delete this round?')) return;
-
   rounds=rounds.filter(r=>r.id!==id);
-
-saveData();
-renderRounds();
-renderTrends();
-renderHandicap();
+  saveData();
+  showView('rounds');
 }
 
 function editRound(id){
   const r=rounds.find(x=>x.id===id);
-
   if(!r) return;
-
   editingRoundId=id;
-
   openRoundModal(r.courseId);
 
   setTimeout(()=>{
@@ -1926,27 +1743,17 @@ function editRound(id){
     });
   },50);
 }
-window.addEventListener('beforeunload',()=>{
-  saveData();
-});
+window.addEventListener('beforeunload',saveData);
+
 if(localStorage.getItem('golfDarkMode')==='true'){
   document.body.classList.add('dark');
-
   setTimeout(()=>{
     const btn=document.getElementById('dark-toggle');
-
-    if(btn){
-      btn.textContent='☀️';
-    }
+    if(btn) btn.textContent='☀️';
   },50);
 }  
+
 loadData();
-
-renderRounds();
-renderCourses();
-renderHandicap();
-renderBag();
-
 showView('rounds');
 </script>
 
